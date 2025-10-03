@@ -11,8 +11,8 @@ export default function Site() {
   });
   const [sent, setSent] = useState(false);
 
-  const phoneDisplay = "519-804-4929";
-  const phoneHref = "+15198044929";
+const phoneDisplay = "226-339-8763";
+const phoneHref = "+12263398763";
   const email = "grandriverpropertyservices@gmail.com";
 
   const onSubmit = async (e) => {
