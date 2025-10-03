@@ -8,7 +8,6 @@
     <link rel="canonical" href="https://grandriverpropertyservices.ca/" />
     <!-- Tailwind CDN (no install required) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" crossorigin src="/assets/index-579f95ff.js"></script>
   </head>
   <body>
     <div id="root"></div>
@@ -20,5 +19,8 @@
       <input type="email" name="email" />
       <textarea name="message"></textarea>
     </form>
+
+    <!-- Let Vite inject the build -->
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
