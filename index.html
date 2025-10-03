@@ -3,15 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Grand River Property Services</title>
-    <meta name="description" content="Handyman services in Kitchener, Waterloo, and Cambridge. Free estimates." />
-    <!-- Tailwind CDN -->
+    <title>Handyman in Kitchener–Waterloo–Cambridge | Grand River Property Services</title>
+    <meta name="description" content="Insured, WSIB, reliable handyman services in Kitchener, Waterloo, and Cambridge. Drywall, carpentry, painting, tile, minor plumbing, exterior repairs. Free estimates." />
+    <link rel="canonical" href="https://grandriverpropertyservices.ca/" />
+    <!-- Tailwind CDN (optional) -->
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
     <div id="root"></div>
 
-    <!-- Hidden Netlify form registration -->
+    <!-- Hidden Netlify form registration (so Netlify detects the form at build time) -->
     <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" style="display:none">
       <input type="hidden" name="form-name" value="contact" />
       <input type="text" name="name" />
@@ -19,7 +20,60 @@
       <textarea name="message"></textarea>
     </form>
 
-    <!-- Point to your React entry (Vite will handle build) -->
+    <!-- Mount your React app (Vite will bundle this) -->
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- ADAPTIVE WIRING: ensures your visible form posts to Netlify (no mail app) even if React originally used mailto -->
+    <script>
+      (function () {
+        function wireNetlifyForm() {
+          // Find the first visible form on the page
+          const forms = Array.from(document.querySelectorAll('form')).filter(f => f.style.display !== 'none');
+          if (!forms.length) return;
+          const f = forms[0];
+
+          // Tag the form for Netlify
+          f.setAttribute('name', 'contact');
+          f.setAttribute('method', 'POST');
+          f.setAttribute('data-netlify', 'true');
+          f.setAttribute('data-netlify-honeypot', 'bot-field');
+
+          // Ensure hidden form-name is present
+          if (!f.querySelector('input[name="form-name"]')) {
+            const hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'form-name';
+            hidden.value = 'contact';
+            f.prepend(hidden);
+          }
+
+          // Ensure key fields have names
+          const firstText = f.querySelector('input[type="text"], input:not([type]), input[type="tel"]');
+          const firstEmail = f.querySelector('input[type="email"]');
+          const firstTextarea = f.querySelector('textarea');
+
+          if (firstText && !firstText.name) firstText.name = 'name';
+          if (firstEmail && !firstEmail.name) firstEmail.name = 'email';
+          if (firstTextarea && !firstTextarea.name) firstTextarea.name = 'message';
+
+          // Kill mailto links inside form and convert them to real submits
+          f.querySelectorAll('a[href^="mailto:"]').forEach(a => {
+            a.addEventListener('click', function (e) {
+              e.preventDefault();
+              // Trigger a real submit instead of opening mail client
+              if (typeof f.requestSubmit === 'function') f.requestSubmit();
+              else f.submit();
+            }, { passive: false });
+          });
+        }
+
+        // Run after DOM loads
+        document.addEventListener('DOMContentLoaded', wireNetlifyForm);
+
+        // Also observe SPA changes (React renders after hydration)
+        const mo = new MutationObserver(() => wireNetlifyForm());
+        mo.observe(document.documentElement, { childList: true, subtree: true });
+      })();
+    </script>
   </body>
 </html>
